@@ -28,11 +28,10 @@ function App() {
   const { user } = useGlobalContext();
 
   return (
-    <>
-      {" "}
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <Nav />
-      {user ? (
-        <>
+      <div style={{ flex: 1 }}>
+        {user ? (
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/artworks/search" element={<ArtSearch />} />
@@ -47,9 +46,7 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-        </>
-      ) : (
-        <>
+        ) : (
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/artworks/search" element={<ArtSearch />} />
@@ -65,10 +62,10 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-        </>
-      )}
+        )}
+      </div>
       <Footer />
-    </>
+    </div>
   );
 }
 
