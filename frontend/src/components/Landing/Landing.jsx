@@ -442,26 +442,6 @@ const Landing = () => {
         </span>
       </div>
 
-      {/* ── FOOTER ────────────────────────────────────────────────────────── */}
-      <footer
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "10px 96px",
-          borderTop: "1px solid var(--color-border)",
-          backgroundColor: "var(--color-background)",
-          marginTop: 0,
-        }}
-      >
-        <span style={{ ...CAPTION, color: "var(--color-text-secondary)" }}>
-          © 2026 CurateSphere · Cassius Reynolds &amp; Mollie Anderson
-        </span>
-        <span style={{ ...CAPTION, color: "var(--color-text-secondary)" }}>
-          Harvard Art Museums API ↗
-        </span>
-      </footer>
-
     </div>
   );
 };

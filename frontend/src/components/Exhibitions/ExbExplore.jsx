@@ -6,12 +6,30 @@ import useGlobalContext from "../../context/global/useGlobalContext";
 // Services
 import { getAllExhibitions } from "../../services/exbService";
 // Components
-import { ExbCard } from "./ExbCard";
+import { ExbListItem } from "./ExbListItem";
 import Loader from "../CommonComponents/Loaders/Loader";
-import Masonry from "react-masonry-css";
-// Icons
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+
+const LABEL = {
+  fontFamily: "var(--font-body)",
+  fontWeight: 500,
+  fontSize: "12px",
+  lineHeight: "140%",
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+};
+
+const CONTROL_INPUT = {
+  fontFamily: "var(--font-body)",
+  fontWeight: 400,
+  fontSize: "14px",
+  lineHeight: "160%",
+  color: "var(--color-text-primary)",
+  backgroundColor: "var(--color-surface)",
+  border: "1px solid var(--color-border)",
+  borderRadius: "var(--radius-md)",
+  padding: "8px 12px",
+  outline: "none",
+};
 
 const ExbExplore = () => {
   // state
@@ -20,16 +38,9 @@ const ExbExplore = () => {
   const [displayedExbs, setDisplayedExbs] = useState([]);
 
   // context
-  const { formatDate, user,scrollToTop } = useGlobalContext();
+  const { formatDate, user, scrollToTop } = useGlobalContext();
   const { handleGetAllExbs, handleSortExbs, exploreExbs, dispatch, isLoading } =
     useExbContext();
-
-  const breakpointColumnsObj = {
-    default: 4,
-    1200: 3,
-    850: 2,
-    600: 1,
-  };
 
   ///////////////////////////
   // Sort Exbs
@@ -85,67 +96,125 @@ const ExbExplore = () => {
   ///////////////////////////
   useEffect(() => {
     handleGetAllExbs();
-    scrollToTop()
+    scrollToTop();
   }, []);
 
   if (isLoading) return <Loader />;
+
   return (
-    <section className="m-24">
-      <h1 className="text-6xl mb-32 mt-52 font-marcellus text-center">
-        Explore Exhibitions
-      </h1>
-      {/* search */}
-      <div className=" flex flex-col md:flex-row  items-center justify-center w-full md:w-1/2 gap-8 mb-20 mx-auto">
-        <div className="relative w-full max-w-[40rem]">
-          <input
-          data-cy="exb-explore-search-exb-input"
-            onChange={handleSearchInputChange}
-            value={query}
-            className=" border-4 border-neutral-900 p-2 w-full  text-2xl"
-            type="text"
-          />
-          <FontAwesomeIcon
-            className="absolute top-1/4 right-5 text-2xl "
-            icon={faSearch}
-          />
-        </div>
-        {/* sort */}
+    <div style={{ marginTop: "64px", backgroundColor: "var(--color-background)" }}>
+
+      {/* ── PAGE HEADER ─────────────────────────────────────────────────── */}
+      <div
+        style={{
+          backgroundColor: "var(--color-surface)",
+          borderBottom: "1px solid var(--color-border)",
+          padding: "80px 96px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "12px",
+        }}
+      >
+        <h1
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 400,
+            fontSize: "48px",
+            lineHeight: "110%",
+            letterSpacing: "-0.02em",
+            color: "var(--color-text-primary)",
+            margin: 0,
+            textAlign: "center",
+          }}
+        >
+          Explore Exhibitions
+        </h1>
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontWeight: 400,
+            fontSize: "16px",
+            lineHeight: "160%",
+            color: "var(--color-text-secondary)",
+            margin: 0,
+            textAlign: "center",
+          }}
+        >
+          Browse curated exhibitions from the CurateSphere community.
+        </p>
+        <span style={{ ...LABEL, color: "var(--color-text-secondary)" }}>
+          {displayedExbs.length}{" "}
+          {displayedExbs.length === 1 ? "exhibition" : "exhibitions"}
+        </span>
+      </div>
+
+      {/* ── CONTROLS BAR ────────────────────────────────────────────────── */}
+      <div
+        style={{
+          backgroundColor: "var(--color-background)",
+          borderBottom: "1px solid var(--color-border)",
+          padding: "16px 96px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "24px",
+        }}
+      >
+        {/* Sort selector — left */}
         <select
-        data-cy="exb-explore-sort-select"
+          data-cy="exb-explore-sort-select"
           value={sortInput}
           onChange={handleSortExhibitions}
-          className="border-black border-2 px-4 py-2"
           name="exb-sort"
           id="exb-sort"
+          style={{
+            ...CONTROL_INPUT,
+            ...LABEL,
+            color: "var(--color-text-secondary)",
+            cursor: "pointer",
+          }}
         >
           <option disabled value="">
-            Sort Exbs
+            Sort
           </option>
-          <option value="newest">Newest Added</option>
-          <option value="oldest">Oldest Added</option>
-          <option value="a-z">A to Z</option>
-          <option value="z-a">Z to A</option>
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="a-z">A → Z</option>
+          <option value="z-a">Z → A</option>
         </select>
+
+        {/* Result count — center */}
+        <span style={{ ...LABEL, color: "var(--color-text-secondary)" }}>
+          {displayedExbs.length} results
+        </span>
+
+        {/* Search input — right */}
+        <input
+          data-cy="exb-explore-search-exb-input"
+          type="text"
+          onChange={handleSearchInputChange}
+          value={query}
+          placeholder="Search exhibitions..."
+          style={{ ...CONTROL_INPUT, width: "260px" }}
+        />
       </div>
-      {/* grid */}
-      <Masonry
-        breakpointCols={breakpointColumnsObj}
-        className="masonry-grid gap-8"
-        columnClassName="masonry-grid_column"
-      >
-        {displayedExbs?.map((exb) => {
-          return (
-            <ExbCard
-              key={exb.id}
-              id={exb.id}
-              title={exb.title}
-              date={`${formatDate(exb.startDate)} - ${formatDate(exb.endDate)}`}
-              location={exb.location}
-            />
-          );
-        })}
-      </Masonry>
-    </section>
+
+      {/* ── EXHIBITION LIST ──────────────────────────────────────────────── */}
+      <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+        {displayedExbs?.map((exb) => (
+          <ExbListItem
+            key={exb.id}
+            id={exb.id}
+            title={exb.title}
+            date={`${formatDate(exb.startDate)} - ${formatDate(exb.endDate)}`}
+            location={exb.location}
+          />
+        ))}
+      </ul>
+
+    </div>
   );
 };
+
 export default ExbExplore;
