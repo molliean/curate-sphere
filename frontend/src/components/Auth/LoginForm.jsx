@@ -1,11 +1,9 @@
 // React imports
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 // Service and context imports
 import { login } from "../../services/authService";
 import useGlobalContext from "../../context/global/useGlobalContext";
-// Component imports
-import Btn from "../CommonComponents/Btn";
 
 // Initial state for the form data
 const initialFormData = {
@@ -13,12 +11,39 @@ const initialFormData = {
   password: "",
 };
 
+const FIELD_LABEL = {
+  fontFamily: "var(--font-body)",
+  fontWeight: 500,
+  fontSize: "12px",
+  lineHeight: "140%",
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+  color: "var(--color-text-secondary)",
+  display: "block",
+  marginBottom: "6px",
+};
+
+const FIELD_INPUT = {
+  fontFamily: "var(--font-body)",
+  fontWeight: 400,
+  fontSize: "14px",
+  lineHeight: "160%",
+  color: "var(--color-text-primary)",
+  backgroundColor: "var(--color-surface)",
+  border: "1px solid var(--color-border)",
+  borderRadius: "var(--radius-md)",
+  padding: "12px",
+  width: "100%",
+  display: "block",
+  outline: "none",
+  boxSizing: "border-box",
+};
+
 ///////////////////////////
 // LoginForm Component
 ///////////////////////////
 const LoginForm = () => {
   const [formData, setFormData] = useState(initialFormData);
-  // State for feedback messages and success status
   const [message, setMessage] = useState("");
 
   const { setUser } = useGlobalContext();
@@ -44,62 +69,190 @@ const LoginForm = () => {
   };
 
   return (
-    <section className="flex flex-col items-center font-marcellus min-h-screen">
-      <h1 className="text-3xl text-neutral-700 mb-12">Login</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="w-3/5 max-w-[30rem] mx-auto border border-neutral-900 p-12 rounded-md"
+    <div
+      style={{
+        minHeight: "calc(100vh - 64px)",
+        marginTop: "64px",
+        backgroundColor: "var(--color-surface)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingTop: "32px",
+        paddingBottom: "48px",
+        paddingLeft: "16px",
+        paddingRight: "16px",
+        boxSizing: "border-box",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "480px",
+          backgroundColor: "var(--color-background)",
+          border: "1px solid var(--color-border)",
+          borderRadius: "var(--radius-lg)",
+        }}
+      >
+        {/* Card header */}
+        <div
+          style={{
+            padding: "32px 40px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "8px",
+            borderBottom: "1px solid var(--color-border)",
+          }}
         >
-        {message && (
-          <div className="flex flex-col md:flex-row items-center justify-center gap-12 text-center">
-            <span data-cy="error-message" className="text-2xl text-red-500">
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 400,
+              fontSize: "32px",
+              lineHeight: "120%",
+              color: "var(--color-text-primary)",
+              margin: 0,
+              textAlign: "center",
+            }}
+          >
+            Welcome back
+          </h2>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontWeight: 400,
+              fontSize: "14px",
+              lineHeight: "160%",
+              color: "var(--color-text-secondary)",
+              margin: 0,
+              textAlign: "center",
+            }}
+          >
+            Sign in to access your exhibitions and the Harvard Art Museums collection.
+          </p>
+        </div>
+
+        {/* Form body */}
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            padding: "32px 40px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          {message && (
+            <span
+              data-cy="error-message"
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "14px",
+                color: "var(--color-error)",
+                textAlign: "center",
+              }}
+            >
               {message}
             </span>
+          )}
+
+          {/* Username field */}
+          <div>
+            <label htmlFor="username" style={FIELD_LABEL}>
+              username
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              style={FIELD_INPUT}
+              placeholder="ExampleUser123"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
           </div>
-        )}
-        {/* Username input field */}
-        <div className="mb-5">
-          <label
-            htmlFor="username"
-            className="block mb-2 text-sm font-medium text-gray-900 "
-          >
-            Your username
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="ExampleUser123"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
 
-        {/* Password input field */}
-        <div className="mb-5">
-          <label
-            htmlFor="password"
-            className="block mb-2 text-sm font-medium text-gray-900"
-          >
-            Your password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          {/* Password field */}
+          <div>
+            <label htmlFor="password" style={FIELD_LABEL}>
+              password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              style={FIELD_INPUT}
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        {/* Submit button */}
-        <Btn handleAction={handleSubmit} text="Login" />
-      </form>
-    </section>
+          {/* Submit button */}
+          <button
+            type="submit"
+            style={{
+              fontFamily: "var(--font-body)",
+              fontWeight: 500,
+              fontSize: "12px",
+              lineHeight: "140%",
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              backgroundColor: "var(--color-neutral-1000)",
+              color: "var(--color-neutral-0)",
+              border: "none",
+              borderRadius: "var(--radius-md)",
+              padding: "8px 16px",
+              width: "100%",
+              cursor: "pointer",
+            }}
+          >
+            sign in
+          </button>
+        </form>
+
+        {/* Card footer */}
+        <div
+          style={{
+            backgroundColor: "var(--color-surface)",
+            borderTop: "1px solid var(--color-border)",
+            borderRadius: "0 0 var(--radius-lg) var(--radius-lg)",
+            padding: "20px 40px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "8px",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontWeight: 400,
+              fontSize: "14px",
+              lineHeight: "160%",
+              color: "var(--color-text-secondary)",
+            }}
+          >
+            Don't have an account?
+          </span>
+          <Link
+            to="/register"
+            style={{
+              fontFamily: "var(--font-body)",
+              fontWeight: 400,
+              fontSize: "14px",
+              lineHeight: "160%",
+              color: "var(--color-text-primary)",
+              textDecoration: "underline",
+            }}
+          >
+            Sign up
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 };
 
