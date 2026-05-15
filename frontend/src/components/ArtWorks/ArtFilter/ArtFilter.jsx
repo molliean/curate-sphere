@@ -1,20 +1,11 @@
-// React imports
-import { useState } from "react";
 // Context hooks
 import useArtworkContext from "../../../context/artwork/useArtworkContext";
 // Component imports
 import { SearchCategoryDropdown } from "./SearchCategoryDropdown";
 
 const ArtFilter = () => {
-  // Local state for dropdown visibility
-
-  // Destructuring context values
   const {
-    handleShowDropdown,
-    handleDisplayView,
-    displayView,
     primaryCategories,
-    showFilterDropdown,
     century,
     classification,
     culture,
@@ -22,10 +13,10 @@ const ArtFilter = () => {
     period,
     technique,
     worktype,
+    handleResetFilterState,
   } = useArtworkContext();
 
-  // Ensures all filters are loaded before displaying the dropdown
-
+  // Ensures all filters are loaded before displaying the categories
   const allFiltersLoaded =
     Object.values(century?.records).length > 0 &&
     Object.values(classification?.records).length > 0 &&
@@ -34,39 +25,57 @@ const ArtFilter = () => {
     Object.values(period?.records).length > 0 &&
     Object.values(technique?.records).length > 0 &&
     Object.values(worktype?.records).length > 0;
-  ///////////////////////////
 
   return (
-    <div className="flex gap-4 font-cardo mt-12 md:mt-0">
-      {/* Filter Button */}
-      <button
-        data-cy="filter-btn"
-        onClick={() => handleShowDropdown(allFiltersLoaded, false)}
-        className="text-white bg-neutral-700 hover:bg-neutral-800 focus:ring-4 focus:outline-none focus:ring-neutral-300 font-medium rounded-lg text-xl w-full sm:w-auto px-8 py-4"
+    <div>
+      {/* Panel header */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "16px 24px",
+          borderBottom: "1px solid var(--color-border)",
+        }}
       >
-        Filters
-      </button>
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontWeight: 500,
+            fontSize: "12px",
+            lineHeight: "140%",
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            color: "var(--color-text-secondary)",
+          }}
+        >
+          Filters
+        </span>
+        <button
+          data-cy="reset-filter-btn"
+          onClick={handleResetFilterState}
+          style={{
+            fontFamily: "var(--font-body)",
+            fontWeight: 400,
+            fontSize: "12px",
+            lineHeight: "140%",
+            color: "var(--color-text-secondary)",
+            textDecoration: "underline",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: 0,
+          }}
+        >
+          Clear all
+        </button>
+      </div>
 
-      {/* Display Style Dropdown */}
-      <select
-        value={displayView}
-        onChange={(e) => handleDisplayView(e.target.value)}
-        name="art-display-style"
-        id="art-display-style"
-        className="text-white bg-neutral-700 hover:bg-neutral-800 focus:ring-4 focus:outline-none focus:ring-neutral-300 font-medium rounded-lg text-xl w-full sm:w-auto px-8 py-4"
-      >
-        <option disabled value="">
-          Display Style
-        </option>
-        <option value="gallery">Gallery</option>
-        <option value="list">List</option>
-      </select>
-
-      {/* Filter Dropdown */}
-      {showFilterDropdown && (
+      {/* Filter categories */}
+      {allFiltersLoaded ? (
         <ul
           data-cy="filter-dropdown-ul"
-          className="shadow-md w-3/4 md:w-96 min-w-96 absolute z-20 top-full"
+          style={{ listStyle: "none", margin: 0, padding: 0 }}
         >
           {primaryCategories.map((category, idx) => (
             <SearchCategoryDropdown
@@ -76,6 +85,18 @@ const ArtFilter = () => {
             />
           ))}
         </ul>
+      ) : (
+        <div
+          style={{
+            padding: "24px",
+            fontFamily: "var(--font-body)",
+            fontSize: "12px",
+            color: "var(--color-text-secondary)",
+            textAlign: "center",
+          }}
+        >
+          Loading filters…
+        </div>
       )}
     </div>
   );

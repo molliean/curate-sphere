@@ -1,7 +1,5 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { SearchFilterCheckBox } from "./SearchFilterCheckbox";
-import { faChevronLeft, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 export const SearchCategoryDropdown = ({ primaryCategory, subCategories }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -27,58 +25,102 @@ export const SearchCategoryDropdown = ({ primaryCategory, subCategories }) => {
     // resets results if user cleared search
     if (searchQuery.length === 0) setDisplaySubCategories(subCategories);
   };
+
   ///////////////////////////
   // Handle Show Dropdown
-  //////////////////////////F
+  ///////////////////////////
   const handleShowDropdown = () => {
     setShowDropdown((prev) => !prev);
   };
+
   return (
-    <li className="p-4 text-3xl bg-gray-50 flex flex-col items-start gap-3">
-      <div className="flex items-center gap-4">
-        <span>{primaryCategory} </span>
-        <FontAwesomeIcon
-          onClick={handleShowDropdown}
-          className={`${
-            showDropdown ? "rotate-90" : "-rotate-90"
-          } cursor-pointer text-4xl`}
-          icon={faChevronLeft}
-        />
+    <li style={{ borderBottom: "1px solid var(--color-border)", listStyle: "none" }}>
+      {/* Category header */}
+      <div
+        onClick={handleShowDropdown}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "12px 24px",
+          cursor: "pointer",
+          userSelect: "none",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontWeight: 500,
+            fontSize: "12px",
+            lineHeight: "140%",
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          {primaryCategory}
+        </span>
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: "12px",
+            color: "var(--color-text-secondary)",
+            display: "inline-block",
+            transform: showDropdown ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0.15s ease",
+          }}
+        >
+          ▾
+        </span>
       </div>
 
-      <div className=" w-full">
-        {/* dropdown */}
-        {showDropdown && (
-          <>
-            {" "}
-            <div className="relative flex flex-col justify-start">
-              {/* search input */}
-              <input
+      {/* Expanded content */}
+      {showDropdown && (
+        <div style={{ paddingBottom: "12px" }}>
+          {/* Search input */}
+          <div style={{ padding: "0 16px 8px" }}>
+            <input
               data-cy="subcategory-search-input"
-                onChange={handleSearchQuery}
-                className=" border-4 border-neutral-900 p-2 mt-4 mb-6 w-full "
-                type="text"
+              onChange={handleSearchQuery}
+              type="text"
+              placeholder="Search..."
+              style={{
+                fontFamily: "var(--font-body)",
+                fontWeight: 400,
+                fontSize: "12px",
+                lineHeight: "140%",
+                color: "var(--color-text-primary)",
+                backgroundColor: "var(--color-surface)",
+                border: "1px solid var(--color-border)",
+                borderRadius: "var(--radius-sm)",
+                padding: "6px 10px",
+                width: "100%",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+            />
+          </div>
+          {/* Subcategory list */}
+          <ul
+            data-cy="subcategory-dropdown-ul"
+            style={{
+              maxHeight: "200px",
+              overflowY: "auto",
+              listStyle: "none",
+              margin: 0,
+              padding: "0 8px",
+            }}
+          >
+            {Object.values(displaySubCategories)?.map((category) => (
+              <SearchFilterCheckBox
+                primaryCategoryKey={primaryCategory}
+                category={category}
+                key={category.id}
               />
-              <FontAwesomeIcon
-                className="absolute top-8 right-5  text-2xl "
-                icon={faSearch}
-              />
-              {/* subcategories */}
-              <ul data-cy="subcategory-dropdown-ul" className=" overflow-y-scroll h-72">
-                {Object.values(displaySubCategories)?.map((category, idx) => {
-                  return (
-                    <SearchFilterCheckBox
-                      primaryCategoryKey={primaryCategory}
-                      category={category}
-                      key={category.id}
-                    />
-                  );
-                })}
-              </ul>
-            </div>
-          </>
-        )}
-      </div>
+            ))}
+          </ul>
+        </div>
+      )}
     </li>
   );
 };
