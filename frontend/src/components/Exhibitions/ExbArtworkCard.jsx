@@ -112,12 +112,12 @@ const ExbArtworkCard = ({ ArtworkObjectid, isUsersExb }) => {
           <img
             src={primaryimageurl}
             alt={title || "Artwork"}
-            style={{ width: "100%", display: "block", objectFit: "cover" }}
+            style={{ width: "100%", height: "200px", display: "block", objectFit: "cover" }}
           />
         ) : (
           <div
             style={{
-              minHeight: "180px",
+              height: "200px",
               backgroundColor: "var(--color-accent-dark)",
               display: "flex",
               alignItems: "center",
