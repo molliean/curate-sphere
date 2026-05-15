@@ -1,114 +1,195 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
 import LoaderText from "../CommonComponents/Loaders/LoaderText";
 import useGlobalContext from "../../context/global/useGlobalContext";
-import { NavListItem } from "./NavListItem";
+
+const NAV_LINK_STYLE = {
+  fontFamily: "var(--font-body)",
+  fontWeight: 600,
+  fontSize: "20px",
+  lineHeight: "130%",
+  color: "var(--color-text-primary)",
+  textDecoration: "none",
+  paddingTop: "var(--space-1)",
+  paddingBottom: "var(--space-1)",
+};
+
+const DROPDOWN_ITEM_STYLE = {
+  fontFamily: "var(--font-body)",
+  letterSpacing: "0.06em",
+  color: "var(--color-text-secondary)",
+};
 
 const DesktopNav = ({ setIsMenuOpen, handleResetContextState }) => {
   const { user, handleSignout, isLoading } = useGlobalContext();
+  const [avatarOpen, setAvatarOpen] = useState(false);
+  const { pathname } = useLocation();
+
+  const linkStyle = (prefix) => ({
+    ...NAV_LINK_STYLE,
+    borderBottom: pathname.startsWith(prefix)
+      ? "2px solid var(--color-accent)"
+      : "2px solid transparent",
+  });
 
   return (
-    <ul
-      data-cy="desktop-nav-ul"
-      className="hidden md:flex justify-end gap-12 capitalize w-full md:w-1/2 items-center"
-    >
+    <div className="hidden md:flex items-center" style={{ gap: "var(--space-10)" }}>
       {isLoading ? (
-        <>
-          <LoaderText />
-          <Link
-            data-cy="desktop-nav-settings"
-            onClick={() => setIsMenuOpen(false)}
-            to={`/settings`}
-          >
-            <li className="p-3 text-2xl ">Settings</li>
-          </Link>
-          <Link
-            data-cy="desktop-nav-login"
-            onClick={() => setIsMenuOpen(false)}
-            to={`/login`}
-          >
-            <li className="p-3 text-2xl ">Login</li>
-          </Link>
-          <Link
-            data-cy="desktop-nav-register"
-            onClick={() => setIsMenuOpen(false)}
-            to={`/register`}
-          >
-            <li className="p-3 text-2xl ">Register</li>
-          </Link>
-        </>
+        <LoaderText />
       ) : (
         <>
-          <NavListItem
-            setIsMenuOpen={setIsMenuOpen}
-            listItemText={`Exhibitions`}
-            dropDownItems={[
-              { text: "explore exhibitions", path: "/exhibitions/explore" },
-              { text: "create exhibition", path: "/exhibitions/create" },
-              { text: "my exhibitions", path: "/exhibitions/dashboard" },
-            ]}
-          />
-          <Link data-cy="desktop-nav-artwork-search" to={`/artworks/search`}>
-            <li className="p-3 text-2xl">Search Artworks</li>
-          </Link>
-
-          {!user ? (
-            <>
-              {" "}
-              <Link
-                data-cy="desktop-nav-settings"
-                onClick={() => setIsMenuOpen(false)}
-                to={`/settings`}
-              >
-                <li className="p-3 text-2xl ">Settings</li>
-              </Link>
-              <Link
-                data-cy="desktop-nav-login"
-                onClick={() => setIsMenuOpen(false)}
-                to={`/login`}
-              >
-                <li className="p-3 text-2xl">Login</li>
-              </Link>
-              <Link
-                data-cy="desktop-nav-register"
-                onClick={() => setIsMenuOpen(false)}
-                to={`/register`}
-              >
-                <li className="p-3 text-2xl">Register</li>
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link
-                data-cy="desktop-nav-profile"
-                onClick={() => setIsMenuOpen(false)}
-                className={isLoading ? `pointer-events-none` : ""}
-                to={`/profiles/${user?.user?.id}`}
-              >
-                <li className="p-3 text-2xl ">Profile</li>
-              </Link>
-              <Link
-                data-cy="desktop-nav-settings"
-                onClick={() => setIsMenuOpen(false)}
-                to={`/settings`}
-              >
-                <li className="p-3 text-2xl ">Settings</li>
-              </Link>
-              <Link data-cy="desktop-nav-logout" to={`/`}>
-                <li
-                  onClick={() => {
-                    handleResetContextState();
-                    handleSignout();
-                  }}
-                  className="p-3 text-2xl"
+          <ul className="flex items-center list-none m-0 p-0" style={{ gap: "40px" }}>
+            {user && (
+              <li>
+                <Link
+                  to={`/profiles/${user?.user?.id}`}
+                  style={linkStyle("/profiles")}
                 >
-                  Logout
-                </li>
+                  My Collection
+                </Link>
+              </li>
+            )}
+
+            <li>
+              <Link
+                data-cy="desktop-nav-artwork-search"
+                to="/artworks/search"
+                style={linkStyle("/artworks")}
+              >
+                Artworks
               </Link>
-            </>
+            </li>
+
+            <li>
+              <Link
+                to="/exhibitions/explore"
+                style={linkStyle("/exhibitions")}
+              >
+                Exhibitions
+              </Link>
+            </li>
+
+            {!user && (
+              <>
+                <li>
+                  <Link
+                    data-cy="desktop-nav-login"
+                    onClick={() => setIsMenuOpen(false)}
+                    to="/login"
+                    style={linkStyle("/login")}
+                  >
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    data-cy="desktop-nav-register"
+                    onClick={() => setIsMenuOpen(false)}
+                    to="/register"
+                    style={linkStyle("/register")}
+                  >
+                    Sign up
+                  </Link>
+                </li>
+              </>
+            )}
+          </ul>
+
+          {user && (
+            <div className="relative">
+              <button
+                onClick={() => setAvatarOpen((prev) => !prev)}
+                className="rounded-full flex items-center justify-center font-semibold focus:outline-none"
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  fontSize: "13px",
+                  backgroundColor: "var(--color-neutral-900)",
+                  color: "var(--color-neutral-0)",
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                {(user?.user?.username || user?.user?.email || "U")[0].toUpperCase()}
+              </button>
+
+              {avatarOpen && (
+                <ul
+                  className="absolute right-0 top-full mt-2 w-44 rounded py-1 z-50 list-none m-0"
+                  style={{
+                    backgroundColor: "var(--color-background)",
+                    border: "1px solid var(--color-border)",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                  }}
+                >
+                  <li>
+                    <Link
+                      data-cy="desktop-nav-profile"
+                      onClick={() => {
+                        setAvatarOpen(false);
+                        setIsMenuOpen(false);
+                      }}
+                      to={`/profiles/${user?.user?.id}`}
+                      className="block px-4 py-2.5 text-xs uppercase transition-colors"
+                      style={DROPDOWN_ITEM_STYLE}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor = "var(--color-surface)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = "")
+                      }
+                    >
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      data-cy="desktop-nav-settings"
+                      onClick={() => {
+                        setAvatarOpen(false);
+                        setIsMenuOpen(false);
+                      }}
+                      to="/settings"
+                      className="block px-4 py-2.5 text-xs uppercase transition-colors"
+                      style={DROPDOWN_ITEM_STYLE}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor = "var(--color-surface)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = "")
+                      }
+                    >
+                      Settings
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      data-cy="desktop-nav-logout"
+                      to="/"
+                      onClick={() => {
+                        setAvatarOpen(false);
+                        handleResetContextState();
+                        handleSignout();
+                      }}
+                      className="block px-4 py-2.5 text-xs uppercase transition-colors"
+                      style={DROPDOWN_ITEM_STYLE}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor = "var(--color-surface)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = "")
+                      }
+                    >
+                      Logout
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </div>
           )}
         </>
       )}
-    </ul>
+    </div>
   );
 };
+
 export default DesktopNav;
