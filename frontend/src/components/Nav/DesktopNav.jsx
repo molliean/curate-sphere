@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import LoaderText from "../CommonComponents/Loaders/LoaderText";
 import useGlobalContext from "../../context/global/useGlobalContext";
 
@@ -33,7 +33,19 @@ const DROPDOWN_ITEM_STYLE = {
 const DesktopNav = ({ setIsMenuOpen, handleResetContextState }) => {
   const { user, handleSignout, isLoading } = useGlobalContext();
   const [avatarOpen, setAvatarOpen] = useState(false);
+  const avatarRef = useRef(null);
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (!avatarOpen) return;
+    const handleOutsideClick = (e) => {
+      if (avatarRef.current && !avatarRef.current.contains(e.target)) {
+        setAvatarOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [avatarOpen]);
 
   const linkStyle = (prefix) => ({
     ...NAV_LINK_STYLE,
@@ -106,7 +118,7 @@ const DesktopNav = ({ setIsMenuOpen, handleResetContextState }) => {
           </ul>
 
           {user && (
-            <div className="relative">
+            <div className="relative" ref={avatarRef}>
               <button
                 onClick={() => setAvatarOpen((prev) => !prev)}
                 className="rounded-full flex items-center justify-center font-semibold focus:outline-none"
