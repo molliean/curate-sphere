@@ -27,7 +27,7 @@ const DesktopNav = ({ setIsMenuOpen, handleResetContextState }) => {
 
   const linkStyle = (prefix) => ({
     ...NAV_LINK_STYLE,
-    borderBottom: pathname.startsWith(prefix)
+    borderBottom: (prefix === "/" ? pathname === "/" : pathname.startsWith(prefix))
       ? "2px solid var(--color-accent)"
       : "2px solid transparent",
   });
@@ -42,8 +42,8 @@ const DesktopNav = ({ setIsMenuOpen, handleResetContextState }) => {
             {user && (
               <li>
                 <Link
-                  to={`/profiles/${user?.user?.id}`}
-                  style={linkStyle("/profiles")}
+                  to="/"
+                  style={linkStyle("/")}
                 >
                   My Collection
                 </Link>

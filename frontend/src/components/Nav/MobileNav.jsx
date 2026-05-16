@@ -112,7 +112,7 @@ const MobileNav = ({ handleToggleMenu, isMenuOpen, setIsMenuOpen, handleResetCon
                   {user && (
                     <Link
                       onClick={() => setIsMenuOpen(false)}
-                      to={`/profiles/${user?.user?.id}`}
+                      to="/"
                       style={PRIMARY_LINK_STYLE}
                     >
                       My Collection
