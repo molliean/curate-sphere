@@ -139,6 +139,7 @@ const Home = () => {
   };
 
   const hasExbs = myExbs?.length > 0;
+  const showExbArrows = myExbs?.length >= 3;
   const totalArtworks = myExbs?.reduce(
     (sum, exb) => sum + (exb?.artworks?.length || 0),
     0
@@ -221,13 +222,15 @@ const Home = () => {
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             {/* Carousel */}
             <div style={{ position: "relative" }}>
-              <button
-                onClick={() => scrollExbs(-1)}
-                aria-label="Scroll exhibitions left"
-                style={{ ...ARROW_BTN, left: "-16px" }}
-              >
-                ←
-              </button>
+              {showExbArrows && (
+                <button
+                  onClick={() => scrollExbs(-1)}
+                  aria-label="Scroll exhibitions left"
+                  style={{ ...ARROW_BTN, left: "-16px" }}
+                >
+                  ←
+                </button>
+              )}
 
               <div
                 ref={exbScrollRef}
@@ -250,13 +253,15 @@ const Home = () => {
                 ))}
               </div>
 
-              <button
-                onClick={() => scrollExbs(1)}
-                aria-label="Scroll exhibitions right"
-                style={{ ...ARROW_BTN, right: "-16px" }}
-              >
-                →
-              </button>
+              {showExbArrows && (
+                <button
+                  onClick={() => scrollExbs(1)}
+                  aria-label="Scroll exhibitions right"
+                  style={{ ...ARROW_BTN, right: "-16px" }}
+                >
+                  →
+                </button>
+              )}
             </div>
 
             {/* View all link */}
