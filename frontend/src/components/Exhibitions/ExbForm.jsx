@@ -170,6 +170,7 @@ const ExbForm = () => {
   return (
     /* Overlay */
     <div
+      onClick={() => navigate(-1)}
       style={{
         position: "fixed",
         inset: 0,
@@ -182,6 +183,7 @@ const ExbForm = () => {
     >
       {/* Modal shell */}
       <div
+        onClick={(e) => e.stopPropagation()}
         style={{
           width: "100%",
           maxWidth: "560px",

@@ -86,6 +86,7 @@ const Modal = ({ isVisible, onClose, exbs = [], ArtworkObjectid }) => {
     /* Overlay */
     <div
       data-cy="default-modal"
+      onClick={handleClose}
       style={{
         position: "fixed",
         inset: 0,
@@ -98,6 +99,7 @@ const Modal = ({ isVisible, onClose, exbs = [], ArtworkObjectid }) => {
     >
       {/* Modal shell */}
       <div
+        onClick={(e) => e.stopPropagation()}
         style={{
           width: "100%",
           maxWidth: "560px",

@@ -4,6 +4,7 @@ const ConfirmDeleteExbModal = ({ isVisible, onClose, onConfirm }) => {
   return (
     /* Overlay */
     <div
+      onClick={onClose}
       style={{
         position: "fixed",
         inset: 0,
@@ -16,6 +17,7 @@ const ConfirmDeleteExbModal = ({ isVisible, onClose, onConfirm }) => {
     >
       {/* Modal shell */}
       <div
+        onClick={(e) => e.stopPropagation()}
         style={{
           width: "100%",
           maxWidth: "560px",

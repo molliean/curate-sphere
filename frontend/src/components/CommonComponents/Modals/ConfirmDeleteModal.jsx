@@ -25,6 +25,7 @@ const ConfirmDeleteModal = ({
     /* Overlay */
     <div
       data-cy="confirm-delete-modal"
+      onClick={onClose}
       style={{
         position: "fixed",
         inset: 0,
@@ -37,6 +38,7 @@ const ConfirmDeleteModal = ({
     >
       {/* Modal shell */}
       <div
+        onClick={(e) => e.stopPropagation()}
         style={{
           width: "100%",
           maxWidth: "560px",
