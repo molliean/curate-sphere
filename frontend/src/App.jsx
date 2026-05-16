@@ -1,5 +1,5 @@
 // React and Router Imports
-import { Route, Routes } from "react-router";
+import { Route, Routes, useLocation } from "react-router";
 // Context Imports
 import useGlobalContext from "./context/global/useGlobalContext";
 // Authentication Components
@@ -26,13 +26,18 @@ import Settings from "./components/Settings";
 
 function App() {
   const { user } = useGlobalContext();
+  const location = useLocation();
+  // Set when navigating to a form route via a Link with state.previousLocation
+  const backgroundLocation = location.state?.previousLocation;
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <Nav />
       <div style={{ flex: 1 }}>
         {user ? (
-          <Routes>
+          // When a background location exists, lock the main routes to that
+          // location so the previous page stays mounted beneath the modal.
+          <Routes location={backgroundLocation || location}>
             <Route path="/" element={<Home />} />
             <Route path="/artworks/search" element={<ArtSearch />} />
             <Route path="/exhibitions/dashboard" element={<ExbDashboard />} />
@@ -47,7 +52,7 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         ) : (
-          <Routes>
+          <Routes location={backgroundLocation || location}>
             <Route path="/" element={<Landing />} />
             <Route path="/artworks/search" element={<ArtSearch />} />
             <Route path="/exhibitions/dashboard" element={<ExbDashboard />} />
@@ -65,6 +70,14 @@ function App() {
         )}
       </div>
       <Footer />
+
+      {/* Modal form overlay — only rendered when previousLocation was passed */}
+      {backgroundLocation && (
+        <Routes>
+          <Route path="/exhibitions/create" element={<ExbForm />} />
+          <Route path="/exhibitions/:id/edit" element={<ExbForm />} />
+        </Routes>
+      )}
     </div>
   );
 }

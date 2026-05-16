@@ -18,10 +18,83 @@ const initialFormData = {
   userId: null,
 };
 
+// ─── Style constants ───────────────────────────────────────────────────────────
+
+const LABEL_STYLE = {
+  fontFamily: "var(--font-body)",
+  fontWeight: 500,
+  fontSize: "12px",
+  lineHeight: "140%",
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+  color: "var(--color-text-secondary)",
+};
+
+const INPUT_STYLE = {
+  width: "100%",
+  fontFamily: "var(--font-body)",
+  fontWeight: 400,
+  fontSize: "14px",
+  lineHeight: "160%",
+  color: "var(--color-text-primary)",
+  backgroundColor: "var(--color-surface)",
+  border: "1px solid var(--color-border)",
+  borderRadius: "var(--radius-md)",
+  padding: "12px",
+  outline: "none",
+  boxSizing: "border-box",
+};
+
+const BTN_PRIMARY = {
+  fontFamily: "var(--font-body)",
+  fontWeight: 500,
+  fontSize: "12px",
+  lineHeight: "140%",
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+  backgroundColor: "var(--color-neutral-1000)",
+  color: "var(--color-neutral-0)",
+  border: "none",
+  borderRadius: "var(--radius-md)",
+  padding: "8px 16px",
+  cursor: "pointer",
+};
+
+const BTN_GHOST = {
+  fontFamily: "var(--font-body)",
+  fontWeight: 500,
+  fontSize: "12px",
+  lineHeight: "140%",
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+  backgroundColor: "transparent",
+  color: "var(--color-text-primary)",
+  border: "1px solid var(--color-neutral-1000)",
+  borderRadius: "var(--radius-md)",
+  padding: "8px 16px",
+  cursor: "pointer",
+};
+
+const BTN_DESTRUCTIVE = {
+  fontFamily: "var(--font-body)",
+  fontWeight: 500,
+  fontSize: "12px",
+  lineHeight: "140%",
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+  backgroundColor: "var(--color-error)",
+  color: "var(--color-neutral-0)",
+  border: "none",
+  borderRadius: "var(--radius-md)",
+  padding: "8px 16px",
+  cursor: "pointer",
+};
+
 // Exhibition Form Component
 const ExbForm = () => {
   const [formData, setFormData] = useState(initialFormData);
-  const { handleGetExbDetail, showExb, handleGetUserExbs } = useExbContext();
+  const { handleGetExbDetail, showExb, handleGetUserExbs, handleDeleteExb } =
+    useExbContext();
   const { user, formatDateForEdit } = useGlobalContext();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -86,108 +159,240 @@ const ExbForm = () => {
   // Redirect to sign-in if the user is not logged in
   if (!user) {
     return (
-      <div className="min-h-screen">
-        <PromptSignIn text={"view your exhibitions"} />;
+      <div style={{ marginTop: "64px", minHeight: "calc(100vh - 64px)" }}>
+        <PromptSignIn text={"view your exhibitions"} />
       </div>
     );
   }
 
+  const isEditMode = Boolean(id);
+
   return (
-    <section className="flex flex-col md:ml-10 font-marcellus min-h-screen">
-      <h1
-        data-cy="manage-exb-form-title"
-        className="text-6xl mb-20 text-center "
+    /* Overlay */
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 100,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {/* Modal shell */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "560px",
+          backgroundColor: "var(--color-background)",
+          border: "1px solid var(--color-border-strong)",
+          borderRadius: "var(--radius-lg)",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          margin: "16px",
+        }}
       >
-        {id ? "Edit" : "Create New"} Exhibition
-      </h1>
-      <form
-        data-cy="exb-form"
-        className="border-t-black border-2 md:border-black w-full md:w-1/2 mx-auto p-5 md:p-11 font-cardo"
-        onSubmit={handleSubmit}
-      >
-        {/* Exhibition Title */}
-        <div className="flex flex-col md:flex-row text-center md:text-start gap-8 mb-5 items-center">
-          <label className="text-3xl w-48" htmlFor="title">
-            Exhibition Title:{" "}
-          </label>
-          <input
-            value={formData.title}
-            onChange={handleChange}
-            className="border-black border w-2/3 p-3 text-xl"
-            type="text"
-            id="title"
-            name="title"
-            required
-          />
-        </div>
-
-        {/* Description */}
-        <div className="flex flex-col md:flex-row text-center md:text-start gap-8 mb-5 items-center">
-          <label className="text-3xl w-48" htmlFor="description">
-            Description:{" "}
-          </label>
-          <textarea
-            value={formData.description}
-            onChange={handleChange}
-            className="border-black border w-2/3 p-3 text-xl"
-            id="description"
-            name="description"
-          />
-        </div>
-
-        {/* Location */}
-        <div className="flex flex-col md:flex-row text-center md:text-start gap-8 mb-5 items-center">
-          <label className="text-3xl w-48" htmlFor="location">
-            Location:{" "}
-          </label>
-          <input
-            value={formData.location}
-            onChange={handleChange}
-            className="border-black border w-2/3 p-3 text-xl"
-            type="text"
-            id="location"
-            name="location"
-          />
-        </div>
-
-        {/* Start Date */}
-        <div className="flex flex-col md:flex-row text-center md:text-start gap-8 mb-5 items-center">
-          <label className="text-3xl w-48" htmlFor="startDate">
-            Start Date:{" "}
-          </label>
-          <input
-            value={formatDateForEdit(formData.startDate)}
-            onChange={handleChange}
-            className="border-black border w-2/3 p-3 text-xl"
-            type="date"
-            id="startDate"
-            name="startDate"
-          />
-        </div>
-
-        {/* End Date */}
-        <div className="flex flex-col md:flex-row text-center md:text-start gap-8 mb-5 items-center">
-          <label className="text-3xl w-48" htmlFor="endDate">
-            End Date:{" "}
-          </label>
-          <input
-            value={formatDateForEdit(formData.endDate)}
-            onChange={handleChange}
-            className="border-black border w-2/3 p-3 text-xl"
-            type="date"
-            id="endDate"
-            name="endDate"
-          />
-        </div>
-
-        {/* Submit Button */}
-        <div className="flex justify-center">
-          <button className="text-2xl border-black border px-6 py-2 mt-10">
-            {id ? "Update" : "Create"} Exhibition
+        {/* ── HEADER ── */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "20px 24px",
+            borderBottom: "1px solid var(--color-border)",
+          }}
+        >
+          <h2
+            data-cy="manage-exb-form-title"
+            style={{
+              fontFamily: "var(--font-body)",
+              fontWeight: 600,
+              fontSize: "20px",
+              lineHeight: "130%",
+              color: "var(--color-text-primary)",
+              margin: 0,
+            }}
+          >
+            {isEditMode ? "Edit exhibition" : "Create exhibition"}
+          </h2>
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            style={{
+              fontFamily: "var(--font-body)",
+              fontWeight: 400,
+              fontSize: "14px",
+              lineHeight: 1,
+              color: "var(--color-text-secondary)",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: "0",
+            }}
+            aria-label="Close"
+          >
+            ✕
           </button>
         </div>
-      </form>
-    </section>
+
+        {/* ── BODY ── */}
+        <form
+          data-cy="exb-form"
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+              padding: "24px",
+            }}
+          >
+            {/* Exhibition Title */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              <label style={LABEL_STYLE} htmlFor="title">
+                Exhibition Title
+              </label>
+              <input
+                value={formData.title}
+                onChange={handleChange}
+                style={INPUT_STYLE}
+                type="text"
+                id="title"
+                name="title"
+                required
+                placeholder="Enter exhibition title"
+              />
+            </div>
+
+            {/* Date row — start + end side by side */}
+            <div style={{ display: "flex", flexDirection: "row", gap: "16px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "6px",
+                  flex: 1,
+                }}
+              >
+                <label style={LABEL_STYLE} htmlFor="startDate">
+                  Start Date
+                </label>
+                <input
+                  value={formatDateForEdit(formData.startDate)}
+                  onChange={handleChange}
+                  style={INPUT_STYLE}
+                  type="date"
+                  id="startDate"
+                  name="startDate"
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "6px",
+                  flex: 1,
+                }}
+              >
+                <label style={LABEL_STYLE} htmlFor="endDate">
+                  End Date
+                </label>
+                <input
+                  value={formatDateForEdit(formData.endDate)}
+                  onChange={handleChange}
+                  style={INPUT_STYLE}
+                  type="date"
+                  id="endDate"
+                  name="endDate"
+                />
+              </div>
+            </div>
+
+            {/* Location */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              <label style={LABEL_STYLE} htmlFor="location">
+                Location
+              </label>
+              <input
+                value={formData.location}
+                onChange={handleChange}
+                style={INPUT_STYLE}
+                type="text"
+                id="location"
+                name="location"
+                placeholder="City, venue, or address"
+              />
+            </div>
+
+            {/* Description */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              <label style={LABEL_STYLE} htmlFor="description">
+                Description
+              </label>
+              <textarea
+                value={formData.description}
+                onChange={handleChange}
+                style={{ ...INPUT_STYLE, height: "96px", resize: "vertical" }}
+                id="description"
+                name="description"
+                placeholder="Describe your exhibition"
+              />
+            </div>
+          </div>
+
+          {/* ── FOOTER ── */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: isEditMode ? "space-between" : "flex-end",
+              gap: "12px",
+              padding: "16px 24px",
+              borderTop: "1px solid var(--color-border)",
+              backgroundColor: "var(--color-surface)",
+            }}
+          >
+            {/* Edit mode: delete button on the left */}
+            {isEditMode && (
+              <button
+                type="button"
+                onClick={async () => {
+                  await handleDeleteExb(id);
+                  handleGetUserExbs();
+                  navigate("/exhibitions/dashboard");
+                }}
+                style={BTN_DESTRUCTIVE}
+              >
+                Delete exhibition
+              </button>
+            )}
+
+            {/* Cancel + Submit on the right */}
+            <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                style={BTN_GHOST}
+              >
+                Cancel
+              </button>
+              <button type="submit" style={BTN_PRIMARY}>
+                {isEditMode ? "Save changes" : "Create Exhibition"}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

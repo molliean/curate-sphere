@@ -1,5 +1,5 @@
 // React Router
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 // Custom Hooks and Contexts
 import useGlobalContext from "../../context/global/useGlobalContext";
 import useArtworkContext from "../../context/artwork/useArtworkContext";
@@ -67,6 +67,7 @@ const ARROW_BTN = {
 };
 
 const Home = () => {
+  const location = useLocation();
   const { user, setUser, setIsLoading } = useGlobalContext();
   const { handleGetAllArtworks, handleGetAllFilterObjs, records } =
     useArtworkContext();
@@ -209,7 +210,7 @@ const Home = () => {
           <span style={{ ...LABEL, color: "var(--color-text-secondary)" }}>
             My Exhibitions
           </span>
-          <Link to="/exhibitions/create" style={{ textDecoration: "none" }}>
+          <Link to="/exhibitions/create" state={{ previousLocation: location }} style={{ textDecoration: "none" }}>
             <button data-cy="user-exbs-btn" style={BTN_PRIMARY}>
               + New Exhibition
             </button>
@@ -281,28 +282,89 @@ const Home = () => {
               border: "1px dashed var(--color-border)",
               borderRadius: "var(--radius-lg)",
               backgroundColor: "var(--color-surface)",
-              padding: "64px 32px",
+              padding: "48px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               gap: "16px",
             }}
           >
-            <p
+            {/* Icon box */}
+            <div
+              style={{
+                width: "64px",
+                height: "64px",
+                border: "1px solid var(--color-border)",
+                borderRadius: "var(--radius-lg)",
+                backgroundColor: "var(--color-surface)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 400,
+                  fontSize: "32px",
+                  lineHeight: "120%",
+                  color: "var(--color-text-secondary)",
+                }}
+              >
+                ○
+              </span>
+            </div>
+
+            {/* Heading */}
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontWeight: 600,
+                fontSize: "20px",
+                lineHeight: "130%",
+                color: "var(--color-text-primary)",
+                textAlign: "center",
+                width: "320px",
+              }}
+            >
+              No exhibitions yet
+            </span>
+
+            {/* Subtext */}
+            <span
               style={{
                 fontFamily: "var(--font-body)",
                 fontWeight: 400,
                 fontSize: "14px",
                 lineHeight: "160%",
                 color: "var(--color-text-secondary)",
-                margin: 0,
                 textAlign: "center",
+                width: "320px",
               }}
             >
-              You haven't created any exhibitions yet.
-            </p>
-            <Link to="/exhibitions/create" style={{ textDecoration: "none" }}>
-              <button style={BTN_PRIMARY}>+ Create Exhibition</button>
+              Create your first exhibition
+            </span>
+
+            {/* Ghost CTA button */}
+            <Link to="/exhibitions/create" state={{ previousLocation: location }} style={{ textDecoration: "none" }}>
+              <button
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 500,
+                  fontSize: "12px",
+                  lineHeight: "140%",
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  backgroundColor: "transparent",
+                  color: "var(--color-neutral-1000)",
+                  border: "1px solid var(--color-neutral-1000)",
+                  borderRadius: "var(--radius-md)",
+                  padding: "8px 16px",
+                  cursor: "pointer",
+                }}
+              >
+                add exhibition
+              </button>
             </Link>
           </div>
         )}

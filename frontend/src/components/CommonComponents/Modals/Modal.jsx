@@ -1,7 +1,7 @@
 // Import React and Hooks
 import { useState } from "react";
 // Import Router components
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 // Import FontAwesome for icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -20,6 +20,7 @@ const Modal = ({ isVisible, onClose, exbs = [], ArtworkObjectid }) => {
   // State to manage messages and filtered exhibitions
   const [message, setMessage] = useState("");
   const [displayUserExbs, setDisplayUserExbs] = useState(exbs);
+  const location = useLocation();
   const { user } = useGlobalContext();
   const {myExbs} = useExbContext()
 
@@ -97,7 +98,7 @@ const Modal = ({ isVisible, onClose, exbs = [], ArtworkObjectid }) => {
             <p className="text-center">Click Exhibition to Add Artwork</p>
             {/* Link to create a new exhibition if none exist */}
             {myExbs?.length < 1  && (
-              <Link to={`/exhibitions/create`}>
+              <Link to="/exhibitions/create" state={{ previousLocation: location }}>
                 <p data-cy="modal-create-first-exb-prompt-btn" className="capitalize text-lg mt-5 border-2 px-4 py-2">
                   Create your first Exhibition!
                 </p>

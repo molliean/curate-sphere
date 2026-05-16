@@ -1,6 +1,6 @@
 // Import React and hooks
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 // Import context hooks
 import useExbContext from "../../context/exb/useExbContext";
 import useGlobalContext from "../../context/global/useGlobalContext";
@@ -24,6 +24,7 @@ const ExbDashboard = () => {
   const [displayedExbs, setDisplayedExbs] = useState([]);
 
   // Global context states and functions
+  const location = useLocation();
   const { formatDate, user } = useGlobalContext();
   const { myExbs, handleSortExbs, dispatch, isLoading } = useExbContext();
 
@@ -102,7 +103,7 @@ const ExbDashboard = () => {
           <h1 data-cy="exb-dashboard-title" className="text-6xl font-marcellus">
             My Exhibitions
           </h1>
-          <Link to="/exhibitions/create">
+          <Link to="/exhibitions/create" state={{ previousLocation: location }}>
             <button
               data-cy="exb-dashboard-add-new-exb-btn"
               className="text-2xl border-black border px-6 py-1 font-cardo"

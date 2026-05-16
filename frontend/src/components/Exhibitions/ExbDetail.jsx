@@ -1,6 +1,6 @@
 // Import React and hooks
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 // Import context hooks
 import useExbContext from "../../context/exb/useExbContext";
 import useGlobalContext from "../../context/global/useGlobalContext";
@@ -82,6 +82,7 @@ const BTN_GHOST = {
 const ExbDetail = () => {
   // Extracting necessary hooks and context values
   const { id } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const { user, scrollToTop } = useGlobalContext();
   const { formatDate } = useGlobalContext();
@@ -273,7 +274,7 @@ const ExbDetail = () => {
               marginTop: "8px",
             }}
           >
-            <Link to={`/exhibitions/${id}/edit`} style={{ textDecoration: "none" }}>
+            <Link to={`/exhibitions/${id}/edit`} state={{ previousLocation: location }} style={{ textDecoration: "none" }}>
               <button data-cy="edit-exb-btn" style={BTN_PRIMARY}>
                 Edit exhibition
               </button>
