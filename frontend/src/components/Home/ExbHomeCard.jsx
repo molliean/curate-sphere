@@ -19,7 +19,7 @@ const ExbHomeCard = ({ id, title, startDate, endDate, location }) => {
   useEffect(() => {
     const fetchCover = async () => {
       const data = await getCoverImg(id);
-      if (data?.primaryimageurl) setCoverImg(data.primaryimageurl);
+      if (data && !data.error) setCoverImg(data);
     };
     fetchCover();
   }, [id]);
