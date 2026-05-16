@@ -268,7 +268,7 @@ const Home = () => {
             {myExbs.length > 3 && (
               <div style={{ textAlign: "right" }}>
                 <Link
-                  to="/exhibitions/dashboard"
+                  to="/"
                   style={{
                     ...LABEL,
                     color: "var(--color-text-secondary)",

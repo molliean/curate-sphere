@@ -67,7 +67,8 @@ export const ProfileCard = () => {
         <h3 data-cy="profile-exb-count" className="text-3xl">
           Exhibitions: {myExbs.length}
         </h3>
-        <Link to={`/exhibitions/dashboard`}>
+        <Link to="/">
+
           <button
             data-cy="profile-user-exbs-btn"
             className="relative text-xl border-2 border-gray-800 text-gray-800 p-3"
