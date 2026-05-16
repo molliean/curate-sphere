@@ -23,15 +23,8 @@ const ArtGalleryCard = ({
   const [isModalVisible, setModalVisible] = useState(false);
   const { myExbs } = useExbContext();
 
-  ///////////////////////////
-  // Modal Actions
-  ///////////////////////////
-  const showModal = () => {
-    setModalVisible(true);
-  };
-  const hideModal = () => {
-    setModalVisible(false);
-  };
+  const showModal = () => setModalVisible(true);
+  const hideModal = () => setModalVisible(false);
 
   return (
     <div
@@ -46,17 +39,23 @@ const ArtGalleryCard = ({
       }}
     >
       {/* Image */}
-      <Link to={`/artwork/${ArtworkObjectid}`} style={{ display: "block" }}>
+      <Link to={`/artwork/${ArtworkObjectid}`} style={{ display: "block", flexShrink: 0 }}>
         {img ? (
           <img
             src={img}
             alt={title}
-            style={{ width: "100%", height: "200px", display: "block", objectFit: "cover" }}
+            style={{
+              width: "100%",
+              height: "240px",
+              display: "block",
+              objectFit: "cover",
+            }}
           />
         ) : (
           <div
             style={{
-              height: "200px",
+              width: "100%",
+              height: "240px",
               backgroundColor: "var(--color-accent-dark)",
               display: "flex",
               alignItems: "center",
@@ -98,106 +97,90 @@ const ArtGalleryCard = ({
         )}
       </Link>
 
-      {/* Metadata */}
+      {/* Label: metadata left, quick-add right, both bottom-aligned */}
       <div
         style={{
-          padding: "12px",
           display: "flex",
-          flexDirection: "column",
-          gap: "4px",
-          flex: 1,
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          alignItems: "flex-end",
+          gap: "2px",
+          padding: "16px",
+          backgroundColor: "var(--color-background)",
         }}
       >
-        {/* Artist */}
-        {people?.[0]?.name && (
-          <span style={{ ...CAPTION, color: "var(--color-text-secondary)" }}>
-            {people[0].name}
-          </span>
-        )}
-        {/* Title */}
-        <span
+        {/* Metadata */}
+        <div
           style={{
-            fontFamily: "var(--font-body)",
-            fontWeight: 400,
-            fontSize: "14px",
-            lineHeight: "160%",
-            fontStyle: "italic",
-            color: "var(--color-text-primary)",
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            gap: "2px",
+            flex: 1,
+            minWidth: 0,
           }}
         >
-          {title}
-        </span>
-        {/* Date */}
-        {year && (
-          <span style={{ ...CAPTION, color: "var(--color-text-secondary)" }}>
-            {year}
-          </span>
-        )}
-        {/* Medium / division */}
-        {division && (
-          <span
-            style={{
-              ...CAPTION,
-              color: "var(--color-text-secondary)",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {division}
-          </span>
-        )}
-      </div>
+          {/* Title + artist grouped */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            {people?.[0]?.name && (
+              <span style={{ ...CAPTION, color: "var(--color-text-primary)" }}>
+                {people[0].name}
+              </span>
+            )}
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontWeight: 400,
+                fontSize: "14px",
+                lineHeight: "160%",
+                fontStyle: "italic",
+                color: "var(--color-text-primary)",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              }}
+            >
+              {title}
+            </span>
+          </div>
+          {year && (
+            <span style={{ ...CAPTION, color: "var(--color-text-secondary)" }}>
+              {year}
+            </span>
+          )}
+          {division && (
+            <span
+              style={{
+                ...CAPTION,
+                color: "var(--color-text-secondary)",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {division}
+            </span>
+          )}
+        </div>
 
-      {/* Action row */}
-      <div
-        style={{
-          borderTop: "1px solid var(--color-border)",
-          padding: "8px 12px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Link
-          to={`/artwork/${ArtworkObjectid}`}
-          style={{
-            fontFamily: "var(--font-body)",
-            fontWeight: 500,
-            fontSize: "11px",
-            lineHeight: "140%",
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            color: "var(--color-text-secondary)",
-            textDecoration: "none",
-          }}
-        >
-          details
-        </Link>
-
+        {/* Quick add */}
         <button
           data-cy="add-artwork-plus"
           onClick={showModal}
           style={{
-            fontFamily: "var(--font-body)",
-            fontWeight: 500,
-            fontSize: "11px",
-            lineHeight: "140%",
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            backgroundColor: "var(--color-neutral-1000)",
-            color: "var(--color-neutral-0)",
+            background: "none",
             border: "none",
-            borderRadius: "var(--radius-sm)",
-            padding: "4px 10px",
             cursor: "pointer",
+            padding: 0,
+            fontFamily: "var(--font-display)",
+            fontWeight: 400,
+            fontSize: "32px",
+            lineHeight: "120%",
+            color: "var(--color-text-primary)",
+            flexShrink: 0,
           }}
         >
-          + add
+          +
         </button>
 
         <Modal
@@ -205,17 +188,7 @@ const ArtGalleryCard = ({
           exbs={myExbs}
           isVisible={isModalVisible}
           onClose={hideModal}
-        >
-          <p className="mt-4 px-4 py-2 bg-black text-white">
-            Add to Exhibition
-          </p>
-          <button
-            onClick={hideModal}
-            className="mt-4 px-4 py-2 bg-black text-white"
-          >
-            Close
-          </button>
-        </Modal>
+        />
       </div>
     </div>
   );
