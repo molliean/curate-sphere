@@ -15,9 +15,19 @@ const NAV_LINK_STYLE = {
 };
 
 const DROPDOWN_ITEM_STYLE = {
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "flex-end",
+  alignSelf: "stretch",
+  padding: "10px 12px",
   fontFamily: "var(--font-body)",
-  letterSpacing: "0.06em",
-  color: "var(--color-text-secondary)",
+  fontWeight: 400,
+  fontSize: "16px",
+  lineHeight: "160%",
+  textDecoration: "none",
+  cursor: "pointer",
+  backgroundColor: "transparent",
+  border: "none",
 };
 
 const DesktopNav = ({ setIsMenuOpen, handleResetContextState }) => {
@@ -114,14 +124,21 @@ const DesktopNav = ({ setIsMenuOpen, handleResetContextState }) => {
 
               {avatarOpen && (
                 <ul
-                  className="absolute right-0 top-full mt-2 w-44 rounded py-1 z-50 list-none m-0"
+                  className="absolute right-0 top-full mt-2 z-50 list-none"
                   style={{
+                    width: "160px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "10px",
+                    padding: "10px",
                     backgroundColor: "var(--color-background)",
                     border: "1px solid var(--color-border)",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                    borderRadius: "var(--radius-md)",
+                    margin: 0,
                   }}
                 >
-                  <li>
+                  <li style={{ alignSelf: "stretch" }}>
                     <Link
                       data-cy="desktop-nav-profile"
                       onClick={() => {
@@ -129,19 +146,18 @@ const DesktopNav = ({ setIsMenuOpen, handleResetContextState }) => {
                         setIsMenuOpen(false);
                       }}
                       to={`/profiles/${user?.user?.id}`}
-                      className="block px-4 py-2.5 text-xs uppercase transition-colors"
-                      style={DROPDOWN_ITEM_STYLE}
+                      style={{ ...DROPDOWN_ITEM_STYLE, color: "var(--color-text-primary)" }}
                       onMouseEnter={(e) =>
                         (e.currentTarget.style.backgroundColor = "var(--color-surface)")
                       }
                       onMouseLeave={(e) =>
-                        (e.currentTarget.style.backgroundColor = "")
+                        (e.currentTarget.style.backgroundColor = "transparent")
                       }
                     >
                       Profile
                     </Link>
                   </li>
-                  <li>
+                  <li style={{ alignSelf: "stretch" }}>
                     <Link
                       data-cy="desktop-nav-settings"
                       onClick={() => {
@@ -149,19 +165,27 @@ const DesktopNav = ({ setIsMenuOpen, handleResetContextState }) => {
                         setIsMenuOpen(false);
                       }}
                       to="/settings"
-                      className="block px-4 py-2.5 text-xs uppercase transition-colors"
-                      style={DROPDOWN_ITEM_STYLE}
+                      style={{ ...DROPDOWN_ITEM_STYLE, color: "var(--color-text-primary)" }}
                       onMouseEnter={(e) =>
                         (e.currentTarget.style.backgroundColor = "var(--color-surface)")
                       }
                       onMouseLeave={(e) =>
-                        (e.currentTarget.style.backgroundColor = "")
+                        (e.currentTarget.style.backgroundColor = "transparent")
                       }
                     >
                       Settings
                     </Link>
                   </li>
-                  <li>
+                  <li
+                    aria-hidden="true"
+                    style={{
+                      alignSelf: "stretch",
+                      height: "1px",
+                      backgroundColor: "var(--color-border)",
+                      flexShrink: 0,
+                    }}
+                  />
+                  <li style={{ alignSelf: "stretch" }}>
                     <Link
                       data-cy="desktop-nav-logout"
                       to="/"
@@ -170,13 +194,12 @@ const DesktopNav = ({ setIsMenuOpen, handleResetContextState }) => {
                         handleResetContextState();
                         handleSignout();
                       }}
-                      className="block px-4 py-2.5 text-xs uppercase transition-colors"
-                      style={DROPDOWN_ITEM_STYLE}
+                      style={{ ...DROPDOWN_ITEM_STYLE, color: "var(--color-error)" }}
                       onMouseEnter={(e) =>
                         (e.currentTarget.style.backgroundColor = "var(--color-surface)")
                       }
                       onMouseLeave={(e) =>
-                        (e.currentTarget.style.backgroundColor = "")
+                        (e.currentTarget.style.backgroundColor = "transparent")
                       }
                     >
                       Logout
