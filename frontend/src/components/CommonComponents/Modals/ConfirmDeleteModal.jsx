@@ -1,5 +1,4 @@
 import { removeArtworkFromExb } from "../../../services/exbService";
-import Btn from "../Btn";
 
 const ConfirmDeleteModal = ({
   isVisible,
@@ -11,7 +10,6 @@ const ConfirmDeleteModal = ({
   const handleRemoveArtworkFromExb = async () => {
     try {
       const data = await removeArtworkFromExb(id, objectid);
-
       await handleReloadResource(id);
     } catch (err) {
       console.error(err);
@@ -24,24 +22,156 @@ const ConfirmDeleteModal = ({
   }
 
   return (
-    <div data-cy="confirm-delete-modal" className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 modal">
-      <div className="flex flex-col items-center justify-center gap-4 bg-white p-8  rounded-lg shadow-lg  absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <button
-          className="absolute top-0 right-3 text-4xl modal-close"
-          onClick={() => {
-            onClose();
-            // setMessage("");
+    /* Overlay */
+    <div
+      data-cy="confirm-delete-modal"
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 100,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {/* Modal shell */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "560px",
+          backgroundColor: "var(--color-background)",
+          border: "1px solid var(--color-border-strong)",
+          borderRadius: "var(--radius-lg)",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          margin: "16px",
+        }}
+      >
+        {/* ── HEADER ── */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "20px 24px",
+            borderBottom: "1px solid var(--color-border)",
           }}
         >
-          &times;
-        </button>{" "}
-        <p className="mb-10">
-          Are you sure you want to remove this artwork from your exhibition?
-        </p>
-        <div data-cy="action-btns" className="flex gap-8 mt-12 sm:mt-0">
-          {/* close modal */}
-          <Btn handleAction={() => onClose()} text={`cancel`} />
-          <Btn handleAction={handleRemoveArtworkFromExb} text={`confirm`} />
+          <h2
+            style={{
+              fontFamily: "var(--font-body)",
+              fontWeight: 600,
+              fontSize: "20px",
+              lineHeight: "130%",
+              color: "var(--color-text-primary)",
+              margin: 0,
+            }}
+          >
+            Are you sure?
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              fontFamily: "var(--font-body)",
+              fontWeight: 400,
+              fontSize: "14px",
+              lineHeight: 1,
+              color: "var(--color-text-secondary)",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+            }}
+            aria-label="Close"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* ── BODY ── */}
+        <div
+          style={{
+            padding: "24px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontWeight: 400,
+              fontSize: "14px",
+              lineHeight: "160%",
+              color: "var(--color-text-secondary)",
+              margin: 0,
+            }}
+          >
+            This action cannot be undone. This will permanently delete this
+            artwork from the exhibition.
+          </p>
+        </div>
+
+        {/* ── FOOTER ── */}
+        <div
+          data-cy="action-btns"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            gap: "12px",
+            padding: "16px 24px",
+            borderTop: "1px solid var(--color-border)",
+          }}
+        >
+          {/* Cancel */}
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              fontFamily: "var(--font-body)",
+              fontWeight: 500,
+              fontSize: "12px",
+              lineHeight: "140%",
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              backgroundColor: "transparent",
+              color: "var(--color-text-primary)",
+              border: "1px solid var(--color-neutral-1000)",
+              borderRadius: "var(--radius-md)",
+              padding: "8px 16px",
+              cursor: "pointer",
+            }}
+          >
+            Cancel
+          </button>
+
+          {/* Delete */}
+          <button
+            type="button"
+            onClick={handleRemoveArtworkFromExb}
+            style={{
+              fontFamily: "var(--font-body)",
+              fontWeight: 500,
+              fontSize: "12px",
+              lineHeight: "140%",
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              backgroundColor: "var(--color-error)",
+              color: "var(--color-neutral-0)",
+              border: "none",
+              borderRadius: "var(--radius-md)",
+              padding: "8px 16px",
+              cursor: "pointer",
+            }}
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
