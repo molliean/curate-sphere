@@ -209,6 +209,8 @@ const ExbExplore = () => {
             title={exb.title}
             date={`${formatDate(exb.startDate)} - ${formatDate(exb.endDate)}`}
             location={exb.location}
+            artworkCount={exb.artworkCount}
+            username={exb.User?.username}
           />
         ))}
       </ul>

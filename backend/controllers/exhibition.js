@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 const BASE_URL = process.env.HARVARD_API_BASE_URL;
 const API_KEY = process.env.API_KEY;
 const {
-  models: { Exhibition, Artwork, ExhibitionArtworks },
+  models: { Exhibition, Artwork, ExhibitionArtworks, User },
 } = sequelize;
 
 ///////////////////////////
@@ -11,19 +11,23 @@ const {
 ///////////////////////////
 const getAllExhibitions = async (req, res) => {
   const { userId } = req.params;
-let exhibitions = []
+  let exhibitions = [];
   try {
-    if(userId === 'undefined'){
-      exhibitions = await Exhibition.findAll()
-    } else {
-      exhibitions = await Exhibition.findAll({
-      where: {
-        userId: {
-          [Op.ne]: userId,
-        },
+    const where = userId === "undefined" ? {} : { userId: { [Op.ne]: userId } };
+    exhibitions = await Exhibition.findAll({
+      where,
+      include: [{ model: User, attributes: ["username"] }],
+      attributes: {
+        include: [
+          [
+            sequelize.literal(
+              `(SELECT COUNT(*) FROM "ExhibitionArtworks" WHERE "ExhibitionArtworks"."ExhibitionId" = "Exhibition"."id")`
+            ),
+            "artworkCount",
+          ],
+        ],
       },
     });
-    }
     // Check if we found any exhibitions
     if (exhibitions.length === 0) {
       return res.status(400).json({ error: "No exhibitions were found" });

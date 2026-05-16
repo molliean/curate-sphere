@@ -119,7 +119,7 @@ const ExbForm = () => {
         await createExb(formData);
       }
       handleGetUserExbs();
-      navigate("/exhibitions/dashboard");
+      navigate(id ? -1 : "/");
     } catch (err) {
       console.error(err);
     }
@@ -368,7 +368,7 @@ const ExbForm = () => {
                 onClick={async () => {
                   await handleDeleteExb(id);
                   handleGetUserExbs();
-                  navigate("/exhibitions/dashboard");
+                  navigate("/");
                 }}
                 style={BTN_DESTRUCTIVE}
               >
