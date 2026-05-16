@@ -123,7 +123,7 @@ const Landing = () => {
   const featuredCards = records.length > 0 ? records.slice(0, 5) : Array(5).fill(null);
 
   return (
-    <div style={{ backgroundColor: "var(--color-background)" }}>
+    <div style={{ marginTop: "64px", backgroundColor: "var(--color-background)" }}>
 
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
       <div style={{ position: "relative" }}>
@@ -208,7 +208,7 @@ const Landing = () => {
             objects in the Harvard Art Museums collection.
           </p>
           <div style={{ display: "flex", gap: "24px", alignItems: "center" }}>
-            <Link to="/artworks/search">
+            <Link to="/register">
               <button
                 data-cy="landing-search-artworks-btn"
                 style={{
