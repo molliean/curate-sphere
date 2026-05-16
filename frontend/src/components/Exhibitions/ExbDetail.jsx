@@ -8,6 +8,7 @@ import useGlobalContext from "../../context/global/useGlobalContext";
 import Masonry from "react-masonry-css";
 import ExbArtworkCard from "./ExbArtworkCard";
 import Loader from "../CommonComponents/Loaders/Loader";
+import ConfirmDeleteExbModal from "../CommonComponents/Modals/ConfirmDeleteExbModal";
 
 // ─── Type style constants ──────────────────────────────────────────────────────
 
@@ -97,6 +98,7 @@ const ExbDetail = () => {
 
   // UI state for description expand/collapse
   const [isDescExpanded, setIsDescExpanded] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   ///////////////////////////
   // Masonry Grid Config
@@ -135,7 +137,7 @@ const ExbDetail = () => {
     try {
       await handleDeleteExb(id);
       handleGetUserExbs();
-      navigate("/exhibitions/dashboard");
+      navigate("/");
     } catch (err) {
       console.error("Error deleting exhibition", err);
     }
@@ -281,11 +283,16 @@ const ExbDetail = () => {
             </Link>
             <button
               data-cy="delete-exb-btn"
-              onClick={handleDeleteButton}
+              onClick={() => setIsDeleteModalOpen(true)}
               style={BTN_DESTRUCTIVE}
             >
               Delete exhibition
             </button>
+            <ConfirmDeleteExbModal
+              isVisible={isDeleteModalOpen}
+              onClose={() => setIsDeleteModalOpen(false)}
+              onConfirm={handleDeleteButton}
+            />
           </div>
         )}
       </div>
