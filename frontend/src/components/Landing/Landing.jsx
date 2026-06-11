@@ -5,6 +5,15 @@ import { useEffect } from "react";
 // Custom Hooks and Contexts
 import useArtworkContext from "../../context/artwork/useArtworkContext";
 import useGlobalContext from "../../context/global/useGlobalContext";
+// Hero mosaic images
+import fragonard from "../../assets/hero/fragonard.jpg";
+import hashimotoGaho from "../../assets/hero/hashimoto-gaho.jpg";
+import ingres2 from "../../assets/hero/ingres-2.jpg";
+import matisseGeraniums from "../../assets/hero/matisse-geraniums.jpg";
+import picassoBlue from "../../assets/hero/picasso-blue.jpg";
+import ingresGoldenAge from "../../assets/hero/ingres-the-golden-age.jpg";
+import vanGogh from "../../assets/hero/van-gogh.jpg";
+import watermelon from "../../assets/hero/watermelon.jpg";
 
 // ─── Type style constants (px throughout — resets.css sets html font-size: 62.5%) ───
 
@@ -94,6 +103,10 @@ const STEP_CARDS = [
 const MOSAIC_TOP_FLEX = [490, 536, 354, 327];
 const MOSAIC_BOTTOM_FLEX = [320, 530, 327, 335];
 
+// Hero mosaic images
+const MOSAIC_TOP_IMAGES = [fragonard, hashimotoGaho, ingres2, matisseGeraniums];
+const MOSAIC_BOTTOM_IMAGES = [picassoBlue, ingresGoldenAge, vanGogh, watermelon];
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const Landing = () => {
@@ -139,13 +152,11 @@ const Landing = () => {
                 backgroundColor: "var(--color-neutral-300)",
               }}
             >
-              {records[i]?.primaryimageurl && (
-                <img
-                  src={records[i].primaryimageurl}
-                  alt=""
-                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                />
-              )}
+              <img
+                src={MOSAIC_TOP_IMAGES[i]}
+                alt=""
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
             </div>
           ))}
         </div>
@@ -161,13 +172,11 @@ const Landing = () => {
                 backgroundColor: "var(--color-neutral-300)",
               }}
             >
-              {records[4 + i]?.primaryimageurl && (
-                <img
-                  src={records[4 + i].primaryimageurl}
-                  alt=""
-                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                />
-              )}
+              <img
+                src={MOSAIC_BOTTOM_IMAGES[i]}
+                alt=""
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
             </div>
           ))}
         </div>
